@@ -18,6 +18,18 @@ const UserInput = () => {
         console.log(inputArray)
     }
 
+    function addDietaryOption(preference){
+        inputArray.push(dietaryOptions[preference])
+        console.log("after adding pref: ", inputArray)
+    }
+
+    const dietaryOptions=[
+        "High Protein",
+        "Gluten Free",
+        "Vegan",
+        "Vegetarian",
+    ]
+
     return (
 
         <div className="max-w-2xl mx-auto p-6 rounded-2xl
@@ -27,7 +39,7 @@ const UserInput = () => {
 
 
 
-        <form onSubmit={handleSubmit} className="flex gap-4">
+        <form onSubmit={handleSubmit} className="flex gap-2">
             <input
                 className="max-w-2xl mx-auto p-2 rounded-2xl
                              bg-white/10 backdrop-blur-lg
@@ -37,7 +49,7 @@ const UserInput = () => {
                 onChange={(e) => setUserInput(e.target.value)}
             ></input>
 
-            <button type="submit"> click me </button>
+            <button type="submit"> Add Food </button>
 
         </form>
 
@@ -55,8 +67,25 @@ const UserInput = () => {
                     ))}
                 </div>
 
-                <div className="">
-                    <p>Dietary Preferences (optional)</p>
+                <div className="mt-10">
+                    <p className="text-xl">Dietary Preferences (optional)</p>
+                    
+                    <div className ="flex gap-3 mt-5">
+                    {dietaryOptions.map((option, index) =>
+                            <button 
+                            className="gap-2 p-3 rounded-2xl
+                                bg-white/10 backdrop-blur-lg
+                                border border-white/20
+                                shadow-lg shadow-black/20"
+                            key ={index}
+                            onClick={() => addDietaryOption(index)}
+                            >{option}</button>
+                            
+                    )}
+                    </div>
+                    
+                    
+
 
                 </div>
             
