@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme{
+  --font-figtree: "Figtree", ui-sans-serif, system-ui, sans-serif;
+}
+
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -26,6 +30,7 @@ a:hover {
 }
 
 body {
+  font-family: var(--font-figtree);
   margin: 0;
   display: flex;
   place-items: center;
@@ -43,9 +48,6 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }

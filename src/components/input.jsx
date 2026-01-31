@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 
 
-//
+
 
 const UserInput = () => {
 
@@ -73,10 +73,10 @@ const UserInput = () => {
                     <div className ="flex gap-3 mt-5">
                     {dietaryOptions.map((option, index) =>
                             <button 
-                            className="gap-2 p-3 rounded-2xl
+                            className="flex gap-2 p-3 rounded-2xl
                                 bg-white/10 backdrop-blur-lg
                                 border border-white/20
-                                shadow-lg shadow-black/20"
+                                shadow-lg shadow-black/20 font-bold"
                             key ={index}
                             onClick={() => addDietaryOption(index)}
                             >{option}</button>
@@ -84,8 +84,7 @@ const UserInput = () => {
                     )}
                     </div>
                     
-                    
-
+                
 
                 </div>
             
