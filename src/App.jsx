@@ -9,7 +9,9 @@ function App() {
   return (
     <div>
 
-      <UserInput/>
+      <div className="">
+        <UserInput/>
+      </div>
     </div>
   )
 }

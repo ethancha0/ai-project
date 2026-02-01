@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { IoCloseSharp } from "react-icons/io5";
 
+import Recommendations from "./recommendations"
 
 
 
@@ -9,6 +11,7 @@ const UserInput = () => {
 
     const[userInput, setUserInput] = useState("");
     const[inputArray, setInputArray] = useState([])
+    const[recommendations, setRecommendations] = useState([])
 
     function handleSubmit(e){
         e.preventDefault()
@@ -16,6 +19,28 @@ const UserInput = () => {
         setUserInput("")
         
         console.log(inputArray)
+    }
+
+    async function handleRecommendations(){
+        //obj to hold foods, preferences, etc. scalable
+        /*
+        const payload = {
+            inputArray
+        }
+
+        const res = await fetch("/api/recommend",{
+            method: "POST",
+            headers: {"Content-Type": "applicatoin/json"},
+            body: JSON.stringify(payload),
+        })
+        
+        if(!res.ok) throw new Error("Recommendation failed")
+        const data = await res.json();
+        setRecommendations(data.recommendations)
+        */
+       console.log("handling recommend")
+       setRecommendations(["beef", "chicken"])
+
     }
 
     function addDietaryOption(preference){
@@ -55,15 +80,20 @@ const UserInput = () => {
 
         {inputArray.length > 0 && (
             <div>
-                <div className="flex mt-10 gap-3">
+                <div className="flex justify-center cent mt-10 gap-3">
                     {inputArray.map((t, index) =>(
-                        <p 
-                        className=" gap-2 p-3 rounded-2xl
+                        <div className="flex  align-itemgap-2 p-3 rounded-2xl
                                 bg-white/10 backdrop-blur-lg
                                 border border-white/20
-                                shadow-lg shadow-black/20"
+                                shadow-lg shadow-black/20">
+                        <p 
+                        className=" "
                         key={index}>
-                            {t}</p>
+                            {t}
+                        </p>
+                        <IoCloseSharp />
+                        </div>
+                        
                     ))}
                 </div>
 
@@ -83,11 +113,28 @@ const UserInput = () => {
                             
                     )}
                     </div>
-                    
-                
-
                 </div>
+
+                <div className="">
+                    <button 
+                        className="justify-center flex gap-2 p-8 mt-8 w-full rounded-2xl
+                                bg-white/10 backdrop-blur-lg
+                                border border-white/20
+                                shadow-lg shadow-black/20 font-bold"
+                        onClick={handleRecommendations}
+                    >Get Recommendations
+                    
+                    </button>
+                </div>
+                
+                {recommendations.length && (
+                    <div>
+                    <Recommendations recomend={recommendations}/>
+                    </div>
+                )
+                
             
+            }
 
 
 
