@@ -1,3 +1,7 @@
+# FASTAPI imports 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from langchain_core.messages import HumanMessage
 #wrapper around OpenAI chat models. handles API calls, message formatting, streaming responses
 from langchain_openai import ChatOpenAI 
@@ -11,6 +15,43 @@ import os
 #loads in the .env file
 load_dotenv()
 api_key = os.getenv("OPENAI_AI_KEY")
+
+app = FastAPI(title="Nom API")
+
+# Enable CORS to talk to React (origin must include scheme: http://)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def root():
+    return{"message": "FastAPI is running"}
+
+# user preferences 
+'''
+@app.post("/api/reccomend")
+def reccommend_food(data: FoodRequest):
+    print(data.foods)
+    return{
+
+    }
+'''
+
+#send back test data
+@app.get('/api/recommend')
+def recommend():
+    foods = ["beef", "chicken", "salmon"]
+    print("sending data to react: ", foods)
+    return{"foods": foods}
+    
+
+
 
 def main():
     # Instantiates a chat model. temp = 0 means very deterministic, less creative
