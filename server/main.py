@@ -11,6 +11,7 @@ from langchain.tools import tool
 from langgraph.prebuilt import create_react_agent
 from dotenv import load_dotenv
 import os
+from pydantic import BaseModel
 
 #loads in the .env file
 load_dotenv()
@@ -33,15 +34,14 @@ app.add_middleware(
 def root():
     return{"message": "FastAPI is running"}
 
-# user preferences 
-'''
-@app.post("/api/reccomend")
-def reccommend_food(data: FoodRequest):
-    print(data.foods)
-    return{
+class Preferences(BaseModel):
+    foods: list[str]
 
-    }
-'''
+# get user's preferences
+@app.post("/api/preferences")
+def preferences(data: Preferences):
+    print(data.foods)
+    return{"recieved": data.foods}
 
 #send back test data
 @app.get('/api/recommend')

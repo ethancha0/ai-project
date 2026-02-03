@@ -21,25 +21,25 @@ const UserInput = () => {
         console.log(inputArray)
     }
 
-    async function handleRecommendations(){
+    async function sendPreferences(){
         //obj to hold foods, preferences, etc. scalable
-        /*
         const payload = {
-            inputArray
+            foods: inputArray
         }
 
-        const res = await fetch("/api/recommend",{
+        const res = await fetch("http://127.0.0.1:8000/api/preferences",{
             method: "POST",
-            headers: {"Content-Type": "applicatoin/json"},
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(payload),
-        })
-        
-        if(!res.ok) throw new Error("Recommendation failed")
+
+        });
+
         const data = await res.json();
-        setRecommendations(data.recommendations)
-        */
-       console.log("handling recommend")
-       setRecommendations(["beef", "chicken"])
+        console.log(data)
+
+   
 
     }
 
@@ -121,7 +121,7 @@ const UserInput = () => {
                                 bg-white/10 backdrop-blur-lg
                                 border border-white/20
                                 shadow-lg shadow-black/20 font-bold"
-                        onClick={handleRecommendations}
+                        onClick={sendPreferences}
                     >Get Recommendations
                     
                     </button>
