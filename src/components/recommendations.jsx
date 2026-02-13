@@ -1,15 +1,21 @@
 import React from 'react'
 import { GiElectricalCrescent } from 'react-icons/gi';
+import { useEffect, useState } from 'react';
 
-const recommendations = ({ recomend }) => {
+const recommendations = ({ recommend }) => {
+  
+  const [recommendations, setRecommendations] = useState([]);
+  useEffect(()=>{
+    async function getRecommendations(){
+      fetch("http://127.0.0.1:8000/api/recommend")
+      .then(res => res.json())
+      .then(data =>{
+        setRecommendations(data.foods);
+      });
+    }
+    getRecommendations();
+  },[]);
 
-  async function getRecommendations(){
-    fetch("http://127.0.0.1:8000/api/recommend")
-    .then(res => res.json())
-    .then(data =>{
-      console.log(data.foods);
-    });
-  }
 
 
   return (
@@ -20,14 +26,17 @@ const recommendations = ({ recomend }) => {
                                 shadow-lg shadow-black/20 font-bold">
 
         <p>We recommend you try: </p>
+        <div className="flex flex-wrap gap-2">
+         {recommendations.map((food) => (
+            <div key={food}>
+              <p className="font-bold">{food}</p>
+            </div>
+            ))}
+          </div>
 
-        {recomend?.length > 0 && (
-          <p>{recomend[0]}</p>
-        )}
 
       </div>
       
-      <button onClick={() => getRecommendations()}>test</button>
 
 
     </div>

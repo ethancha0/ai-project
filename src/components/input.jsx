@@ -11,7 +11,7 @@ const UserInput = () => {
 
     const[userInput, setUserInput] = useState("");
     const[inputArray, setInputArray] = useState([])
-    const[recommendations, setRecommendations] = useState([])
+    const[showRecommendations, setShowRecommendations] = useState(false)
 
     function handleSubmit(e){
         e.preventDefault()
@@ -36,10 +36,21 @@ const UserInput = () => {
 
         });
 
+        async function getRecommendations(){
+            fetch("http://127.0.0.1:8000/api/recommend")
+            .then(res => res.json())
+            .then(data =>{
+            console.log(data.foods);
+    });
+  }
+        
+
+
+
         const data = await res.json();
         console.log(data)
 
-   
+        setShowRecommendations(true);
 
     }
 
@@ -82,7 +93,7 @@ const UserInput = () => {
             <div>
                 <div className="flex justify-center cent mt-10 gap-3">
                     {inputArray.map((t, index) =>(
-                        <div className="flex  align-itemgap-2 p-3 rounded-2xl
+                        <div key={index}className="flex  align-itemgap-2 p-3 rounded-2xl
                                 bg-white/10 backdrop-blur-lg
                                 border border-white/20
                                 shadow-lg shadow-black/20">
@@ -127,9 +138,9 @@ const UserInput = () => {
                     </button>
                 </div>
                 
-                {recommendations.length && (
+                {showRecommendations && (
                     <div>
-                    <Recommendations recomend={recommendations}/>
+                    <Recommendations recomend={inputArray}/>
                     </div>
                 )
                 
