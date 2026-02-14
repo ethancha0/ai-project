@@ -4,8 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import Recommendations from "./recommendations"
 
 
-
-
+const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 const UserInput = () => {
 
@@ -27,17 +26,22 @@ const UserInput = () => {
             foods: inputArray
         }
 
-        const res = await fetch("http://127.0.0.1:8000/api/preferences",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-
-        });
+        let res;
+        try {
+            res = await fetch(`${API_BASE}/api/preferences`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+        } catch (err) {
+            console.error("Failed to send preferences:", err);
+            return;
+        }
 
         async function getRecommendations(){
-            fetch("http://127.0.0.1:8000/api/recommend")
+            fetch(`${API_BASE}/api/recommend`)
             .then(res => res.json())
             .then(data =>{
             console.log(data.foods);
@@ -47,8 +51,14 @@ const UserInput = () => {
 
 
 
-        const data = await res.json();
-        console.log(data)
+        if (!res.ok) {
+            const text = await res.text().catch(() => "");
+            console.error("Preferences request failed:", res.status, text);
+            return;
+        }
+
+        const data = await res.json().catch(() => null);
+        console.log(data);
 
         setShowRecommendations(true);
 

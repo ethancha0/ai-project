@@ -8,4 +8,14 @@ export default defineConfig({
     tailwindcss(), // Add the plugin
     react(),
   ],
+  server: {
+    // In dev, forward /api requests to the FastAPI server.
+    // This lets the frontend call /api/* without hardcoding a base URL.
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
 });
