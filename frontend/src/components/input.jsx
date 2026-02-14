@@ -10,6 +10,7 @@ const UserInput = () => {
 
     const[userInput, setUserInput] = useState("");
     const[inputArray, setInputArray] = useState([])
+    const[preferences, setPreferences] = useState([])
     const[showRecommendations, setShowRecommendations] = useState(false)
 
     function handleSubmit(e){
@@ -23,8 +24,10 @@ const UserInput = () => {
     async function sendPreferences(){
         //obj to hold foods, preferences, etc. scalable
         const payload = {
-            foods: inputArray
+            foods: inputArray,
+            additonal: preferences
         }
+        console.log("sending preferences: ", payload)
 
         let res;
         try {
@@ -65,8 +68,8 @@ const UserInput = () => {
     }
 
     function addDietaryOption(preference){
-        inputArray.push(dietaryOptions[preference])
-        console.log("after adding pref: ", inputArray)
+        preferences.push(dietaryOptions[preference])
+        console.log("pref array ", preferences)
     }
 
     const dietaryOptions=[
