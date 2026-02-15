@@ -19,12 +19,13 @@ api_key = os.getenv("OPENAI_AI_KEY")
 
 app = FastAPI(title="Nom API")
 
+
+origins=["http://localhost:5173","http://127.0.0.1:5173","https://nom-food-recommendation.onrender.com"]
+
 # Enable CORS to talk to React (origin must include scheme: http://)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
