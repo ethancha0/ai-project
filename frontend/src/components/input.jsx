@@ -89,7 +89,7 @@ const UserInput = () => {
 
 
 
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2 justify-center">
             <input
                 className="glass-card"
                 value={userInput}
