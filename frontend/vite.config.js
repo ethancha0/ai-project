@@ -1,19 +1,19 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite'; // Import the plugin
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
-// https://vitejs.dev
 export default defineConfig({
-  plugins: [
-    tailwindcss(), // Add the plugin
-    react(),
-  ],
+  plugins: [tailwindcss(), react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   server: {
-    // In dev, forward /api requests to the FastAPI server.
-    // This lets the frontend call /api/* without hardcoding a base URL.
     proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
+      "/api": {
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
     },

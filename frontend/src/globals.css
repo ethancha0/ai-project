@@ -1,0 +1,8 @@
+@layer components {
+  .glass-card {
+    @apply p-2 rounded-2xl bg-white/10 backdrop-blur-lg
+            border border-white/20
+            shadow-lg shadow-black/20;
+  }
+}
+

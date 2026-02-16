@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IoCloseSharp } from "react-icons/io5";
 
 import Recommendations from "./recommendations"
+import { Button } from './ui/button';
 
 
 const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
@@ -90,15 +91,12 @@ const UserInput = () => {
 
         <form onSubmit={handleSubmit} className="flex gap-2">
             <input
-                className="max-w-2xl mx-auto p-2 rounded-2xl
-                             bg-white/10 backdrop-blur-lg
-                              border border-white/20
-                            shadow-lg shadow-black/20"
+                className="glass-card"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
             ></input>
 
-            <button type="submit"> Add Food </button>
+            <button type="submit" className="glass-card">  Add Food </button>
 
         </form>
 
@@ -106,16 +104,23 @@ const UserInput = () => {
             <div>
                 <div className="flex justify-center cent mt-10 gap-3">
                     {inputArray.map((t, index) =>(
-                        <div key={index}className="flex  align-itemgap-2 p-3 rounded-2xl
-                                bg-white/10 backdrop-blur-lg
-                                border border-white/20
-                                shadow-lg shadow-black/20">
+                        <div key={index}className="glass-card flex gap-2">
                         <p 
                         className=" "
                         key={index}>
                             {t}
                         </p>
-                        <IoCloseSharp />
+                        <Button
+                            size="xs-icon"
+                            varient="outline"
+                            className="bg-white/10 backdrop-blur-lg
+                                border border-white/20 hover:bg-gray-400"
+                        >
+                            <IoCloseSharp/>
+                        </Button>
+                      
+                
+                        
                         </div>
                         
                     ))}
@@ -127,10 +132,7 @@ const UserInput = () => {
                     <div className ="flex gap-3 mt-5">
                     {dietaryOptions.map((option, index) =>
                             <button 
-                            className="flex gap-2 p-3 rounded-2xl
-                                bg-white/10 backdrop-blur-lg
-                                border border-white/20
-                                shadow-lg shadow-black/20 font-bold"
+                            className="glass-card"
                             key ={index}
                             onClick={() => addDietaryOption(index)}
                             >{option}</button>
@@ -141,10 +143,7 @@ const UserInput = () => {
 
                 <div className="">
                     <button 
-                        className="justify-center flex gap-2 p-8 mt-8 w-full rounded-2xl
-                                bg-white/10 backdrop-blur-lg
-                                border border-white/20
-                                shadow-lg shadow-black/20 font-bold"
+                        className="glass-card p-6 mt-10 w-full"
                         onClick={sendPreferences}
                     >Get Recommendations
                     
@@ -166,7 +165,6 @@ const UserInput = () => {
         
 
         )}
-
 
         </div>
     )
