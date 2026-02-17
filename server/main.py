@@ -11,13 +11,17 @@ from langchain.tools import tool
 from langgraph.prebuilt import create_react_agent
 from dotenv import load_dotenv
 import os
+import json
+import re
 from pydantic import BaseModel
 
 #loads in the .env file
 load_dotenv()
-api_key = os.getenv("OPENAI_AI_KEY")
 
 app = FastAPI(title="Nom API")
+
+# Simple in-memory cache for latest recommendations (single-process).
+LAST_RECOMMENDATIONS: list[str] = []
 
 
 origins=["http://localhost:5173","http://127.0.0.1:5173","https://nom-food-recommendation.vercel.app"]
@@ -37,19 +41,57 @@ def root():
 
 class Preferences(BaseModel):
     foods: list[str]
+    preferences: list[str] = []
 
 # get user's preferences
 @app.post("/api/preferences")
 def preferences(data: Preferences):
-    print(data.foods)
-    return{"recieved": data.foods}
+    print("foods:", data.foods)
+    print("preferences:", data.preferences)
+    return {"received": {"foods": data.foods, "preferences": data.preferences}}
+
+@app.post("/api/generatefoodrec")
+def generatefoodrec(data: Preferences):
+    print(data)
+
+    prompt = f"""
+    The user likes these cuisines: {data.foods}
+    Dietary preferences/restrictions: {data.preferences}
+
+    Return 5 food recommendations as a JSON array of strings.
+    Only return valid JSON (no backticks, no extra text).
+    Example:
+    ["Grilled Salmon Bowl", "Chicken Teriyaki", "Tofu Stir Fry"]
+
+    """
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    msg = llm.invoke([HumanMessage(content=prompt)])
+    content = (msg.content or "").strip()
+
+    # Parse the model output as JSON array; fallback to extracting first [...] block.
+    try:
+        foods = json.loads(content)
+    except json.JSONDecodeError:
+        m = re.search(r"\[[\s\S]*\]", content)
+        foods = json.loads(m.group(0)) if m else []
+
+    if not isinstance(foods, list):
+        foods = []
+    foods = [str(x) for x in foods][:5]
+
+    global LAST_RECOMMENDATIONS
+    LAST_RECOMMENDATIONS = foods
+    return {"foods": foods}
+
+
+
 
 #send back test data
 @app.get('/api/recommend')
 def recommend():
-    foods = ["beef", "chicken", "salmon"]
+    foods = LAST_RECOMMENDATIONS or ["beef", "chicken", "salmon"]
     print("sending data to react: ", foods)
-    return{"foods": foods}
+    return {"foods": foods}
     
 
 

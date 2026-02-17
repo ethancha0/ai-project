@@ -14,7 +14,7 @@ const UserInput = () => {
     const[preferences, setPreferences] = useState([])
     const[showRecommendations, setShowRecommendations] = useState(false)
 
-    function handleSubmit(e){
+    function handleAddFood(e){
         e.preventDefault()
         inputArray.push(userInput)
         setUserInput("")
@@ -22,17 +22,22 @@ const UserInput = () => {
         console.log(inputArray)
     }
 
+    function handleRemoveFood(food){
+        setInputArray(inputArray.filter(item => item !== food));
+    }
+
+
     async function sendPreferences(){
         //obj to hold foods, preferences, etc. scalable
         const payload = {
             foods: inputArray,
-            additonal: preferences
+            preferences: preferences
         }
         console.log("sending preferences: ", payload)
 
         let res;
         try {
-            res = await fetch(`${API_BASE}/api/preferences`,{
+            res = await fetch(`${API_BASE}/api/generatefoodrec`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,16 +49,15 @@ const UserInput = () => {
             return;
         }
 
+        /*
         async function getRecommendations(){
             fetch(`${API_BASE}/api/recommend`)
             .then(res => res.json())
             .then(data =>{
             console.log(data.foods);
-    });
-  }
+    } );}
+     */
         
-
-
 
         if (!res.ok) {
             const text = await res.text().catch(() => "");
@@ -73,6 +77,7 @@ const UserInput = () => {
         console.log("pref array ", preferences)
     }
 
+
     const dietaryOptions=[
         "High Protein",
         "Gluten Free",
@@ -89,7 +94,7 @@ const UserInput = () => {
 
 
 
-        <form onSubmit={handleSubmit} className="flex gap-2 justify-center">
+        <form onSubmit={handleAddFood} className="flex gap-2 justify-center">
             <input
                 className="glass-card"
                 value={userInput}
@@ -115,6 +120,7 @@ const UserInput = () => {
                             varient="outline"
                             className="bg-white/10 backdrop-blur-lg
                                 border border-white/20 hover:bg-gray-400"
+                            onClick={() => handleRemoveFood(t)}
                         >
                             <IoCloseSharp/>
                         </Button>
@@ -132,7 +138,7 @@ const UserInput = () => {
                     <div className ="flex gap-3 mt-5">
                     {dietaryOptions.map((option, index) =>
                             <button 
-                            className="glass-card"
+                            className={"glass-card"}
                             key ={index}
                             onClick={() => addDietaryOption(index)}
                             >{option}</button>
@@ -149,6 +155,7 @@ const UserInput = () => {
                     
                     </button>
                 </div>
+                
                 
                 {showRecommendations && (
                     <div>

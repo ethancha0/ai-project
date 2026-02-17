@@ -31,16 +31,13 @@ const recommendations = ({ recommend }) => {
 
 
   return (
-    <div>
-      <div className="justify-center flex gap-2 p-8 mt-8 w-full rounded-2xl
-                                bg-white/10 backdrop-blur-lg
-                                border border-white/20
-                                shadow-lg shadow-black/20 font-bold">
+    <div className="mt-6">
+      <div className="glass-card flex flex-col items-center text-center gap-4">
 
         <p>We recommend you try: </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col w-full gap-3">
          {recommendations.map((food) => (
-            <div key={food}>
+            <div key={food} className="glass-card w-full">
               <p className="font-bold">{food}</p>
             </div>
             ))}
