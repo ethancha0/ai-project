@@ -3,6 +3,7 @@ import { IoCloseSharp } from "react-icons/io5";
 
 import Recommendations from "./recommendations"
 import { Button } from './ui/button';
+import { Spinner } from './ui/spinner';
 
 
 const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
@@ -13,6 +14,7 @@ const UserInput = () => {
     const[inputArray, setInputArray] = useState([])
     const[preferences, setPreferences] = useState([])
     const[showRecommendations, setShowRecommendations] = useState(false)
+    const[isLoading, setIsLoading] = useState(false);
 
     function handleAddFood(e){
         e.preventDefault()
@@ -28,6 +30,7 @@ const UserInput = () => {
 
 
     async function sendPreferences(){
+        setIsLoading(true);
         //obj to hold foods, preferences, etc. scalable
         const payload = {
             foods: inputArray,
@@ -49,15 +52,6 @@ const UserInput = () => {
             return;
         }
 
-        /*
-        async function getRecommendations(){
-            fetch(`${API_BASE}/api/recommend`)
-            .then(res => res.json())
-            .then(data =>{
-            console.log(data.foods);
-    } );}
-     */
-        
 
         if (!res.ok) {
             const text = await res.text().catch(() => "");
@@ -68,7 +62,9 @@ const UserInput = () => {
         const data = await res.json().catch(() => null);
         console.log(data);
 
+        setIsLoading(false);
         setShowRecommendations(true);
+        
 
     }
 
@@ -147,13 +143,19 @@ const UserInput = () => {
                     </div>
                 </div>
 
-                <div className="">
+                <div className="flex ">
                     <button 
-                        className="glass-card p-6 mt-10 w-full"
+                        className="glass-card p-6 mt-10 w-full flex justify-center items-center gap-5"
                         onClick={sendPreferences}
-                    >Get Recommendations
-                    
+                        >Get Recommendations
+                        {isLoading && (
+                            <Spinner
+                            className="size-5"
+                        />)
+                        }
+                         
                     </button>
+                   
                 </div>
                 
                 

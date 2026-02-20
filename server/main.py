@@ -1,6 +1,8 @@
 # FASTAPI imports 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.requests import Request
 
 from langchain_core.messages import HumanMessage
 #wrapper around OpenAI chat models. handles API calls, message formatting, streaming responses
@@ -13,12 +15,19 @@ from dotenv import load_dotenv
 import os
 import json
 import re
+from pathlib import Path
 from pydantic import BaseModel
 
 #loads in the .env file
-load_dotenv()
+# Load `server/.env` reliably when running from repo root.
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 app = FastAPI(title="Nom API")
+
+# Ensure 500s still return a JSON body (and pass through CORS middleware).
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(status_code=500, content={"detail": f"Internal Server Error: {type(exc).__name__}"})
 
 # Simple in-memory cache for latest recommendations (single-process).
 LAST_RECOMMENDATIONS: list[str] = []
@@ -64,8 +73,12 @@ def generatefoodrec(data: Preferences):
     ["Grilled Salmon Bowl", "Chicken Teriyaki", "Tofu Stir Fry"]
 
     """
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-    msg = llm.invoke([HumanMessage(content=prompt)])
+    try:
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+        msg = llm.invoke([HumanMessage(content=prompt)])
+    except Exception as e:
+        # If this fires in production, it's usually a missing/invalid OPENAI_API_KEY.
+        raise HTTPException(status_code=500, detail=f"LLM call failed: {type(e).__name__}") from e
     content = (msg.content or "").strip()
 
     # Parse the model output as JSON array; fallback to extracting first [...] block.

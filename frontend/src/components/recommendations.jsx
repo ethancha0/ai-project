@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 // Optional. If unset, we rely on Vite's dev proxy (see `frontend/vite.config.js`).
 const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
+
 const recommendations = ({ recommend }) => {
   
   const [recommendations, setRecommendations] = useState([]);
